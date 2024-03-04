@@ -75,7 +75,7 @@ describe('CAC TAT', () => {
      .should('have.value', '')
   })
 
-  it.only('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+  it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
     cy.get('button[type="submit"]').click()
     cy.get('.error').should('be.visible')
   })
