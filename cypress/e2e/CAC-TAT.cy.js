@@ -18,7 +18,7 @@ describe('CAC TAT', () => {
    cy.get('#email').type('ana.clara@gmail.com')
    cy.get('#phone').type('19993658741')
    cy.get('#open-text-area').type(longText, {delay:0})
-   cy.get('button[type="submit"]').click()
+   cy.contains('button', 'Enviar').click()
 
    cy.get('.success').should('be.visible')
   })
@@ -28,7 +28,7 @@ describe('CAC TAT', () => {
    cy.get('#lastName').type('Clara')
    cy.get('#email').type('ana.clara@gmail,com')
    cy.get('#open-text-area').type('testando...')
-   cy.get('button[type="submit"]').click()
+   cy.contains('button', 'Enviar').click()
 
    cy.get('.error').should('be.visible')
   })
@@ -42,9 +42,9 @@ describe('CAC TAT', () => {
    cy.get('#firstName').type('Ana')
    cy.get('#lastName').type('Clara')
    cy.get('#email').type('ana.clara@gmail.com')
-   cy.get('#phone-checkbox').click()
+   cy.get('#phone-checkbox').check()
    cy.get('#open-text-area').type('testando...')
-   cy.get('button[type="submit"]').click()
+   cy.contains('button', 'Enviar').click()
 
    cy.get('.error').should('be.visible')
   })
@@ -76,7 +76,58 @@ describe('CAC TAT', () => {
   })
 
   it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
-    cy.get('button[type="submit"]').click()
+    cy.contains('button', 'Enviar').click()
     cy.get('.error').should('be.visible')
   })
+
+  it('Envia o formuário com sucesso usando um comando customizado', () => {
+    cy.fillMandatoryFieldsAndSubmit()
+
+    cy.get('.success').should('be.visible')
+  })
+
+  it('seleciona um produto (YouTube) por seu texto', () => {
+    cy.get('select').select('YouTube').should('have.value', 'youtube')
+  })
+
+  it('seleciona um produto (Mentoria) por seu valor', () => {
+    cy.get('select').select('mentoria').should('have.value', 'mentoria')
+  })
+
+  it('seleciona um produto (Blog) por seu indice', () => {
+    cy.get('select').select(1).should('have.value', 'blog')
+  })
+
+  it('marca o tipo de atendimento "Feedback"', () => {
+    cy.get('[type="radio"]').check('feedback').should('be.checked')
+  })
+
+  it('marca cada tipo de atendimento', () => {
+    cy.get('[type="radio"]')
+      .should('have.length', 3)
+      .each( ($radio) => {
+        cy.wrap($radio).check()
+        cy.wrap($radio).should('be.checked')
+      })
+  })
+
+  it('Marca ambos checkboxes, depois desmarca o último', () => {
+    cy.get('[type="checkbox"]')
+      .check()
+      .should('be.checked')
+      .last()
+      .uncheck()
+      .should('not.be.checked')
+  })
+
+  it('Seleciona um arquivo da pasta fixtures', () => {
+    cy.get('#file-upload')
+    .selectFile('cypress/fixtures/example.json').should('be.visible', 'example.json')
+  })
+
+  it.only('Seleciona um arquivo simulando um drag-and-drop', () => {
+    cy.get('#file-upload')
+    .selectFile('cypress/fixtures/example.json', {action: 'drag-drop'}).should('be.visible', 'example.json')
+  })
+
 })
