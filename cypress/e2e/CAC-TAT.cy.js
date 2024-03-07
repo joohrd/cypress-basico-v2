@@ -142,4 +142,10 @@ describe('CAC TAT', () => {
     cy.contains('Talking About Testing').should('be.visible')
   });
 
+  it.only('Encontre o gato', () => {
+    cy.get('#cat')
+      .invoke('show')
+      .should('be.visible')
+  });
+
 })
